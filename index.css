@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Global Base Styles — Premium High-Tech Theme
+   ============================================================ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-navy-900 text-navy-50 font-sans antialiased;
+    background-image:
+      radial-gradient(ellipse at top, rgba(30, 47, 74, 0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, rgba(17, 32, 58, 0.4) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-display;
+  }
+}
+
+/* ============================================================
+   Reusable Component Classes — Glassmorphism + Glow
+   ============================================================ */
+@layer components {
+  /* Premium glassmorphism card — semi-transparent with blur */
+  .glass {
+    @apply bg-white/5 backdrop-blur-2xl border border-white/10 shadow-premium;
+  }
+
+  .glass-light {
+    @apply bg-white/10 backdrop-blur-xl border border-white/15 shadow-glass;
+  }
+
+  .glass-dark {
+    @apply bg-navy-950/40 backdrop-blur-2xl border border-white/5 shadow-glass-lg;
+  }
+
+  /* Primary gradient button with gold glow on hover */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           bg-gradient-to-r from-navy-700 to-navy-800 px-6 py-3
+           font-semibold text-white shadow-glass border border-white/10
+           transition-all duration-300
+           hover:from-navy-600 hover:to-navy-700 hover:shadow-gold-glow hover:-translate-y-0.5
+           focus:outline-none focus:ring-2 focus:ring-gold-400/50 focus:ring-offset-2 focus:ring-offset-navy-900;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           bg-white/5 backdrop-blur-md px-6 py-3
+           font-semibold text-navy-50 border border-white/15 shadow-glass-sm
+           transition-all duration-300
+           hover:bg-white/10 hover:border-gold-400/30 hover:shadow-gold-glow hover:-translate-y-0.5
+           focus:outline-none focus:ring-2 focus:ring-gold-400/50 focus:ring-offset-2 focus:ring-offset-navy-900;
+  }
+
+  /* Gold accent button — for premium CTAs */
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl
+           bg-gradient-to-r from-gold-400 to-gold-500 px-6 py-3
+           font-semibold text-navy-900 shadow-gold-glow
+           transition-all duration-300
+           hover:from-gold-300 hover:to-gold-400 hover:shadow-gold-glow-lg hover:-translate-y-0.5
+           focus:outline-none focus:ring-2 focus:ring-gold-300/50 focus:ring-offset-2 focus:ring-offset-navy-900;
+  }
+
+  /* Premium input field — soft rounded, glow on focus */
+  .input-premium {
+    @apply w-full rounded-xl border border-white/10 bg-white/5 backdrop-blur-md
+           px-4 py-3 text-navy-50 placeholder-navy-300/50 shadow-sm
+           transition-all duration-300
+           hover:border-white/20
+           focus:border-gold-400/50 focus:outline-none focus:ring-2 focus:ring-gold-400/20
+           focus:bg-white/10 focus:shadow-gold-glow;
+  }
+
+  /* Section heading underline accent — gold gradient */
+  .heading-accent {
+    @apply after:content-[''] after:block after:mt-3 after:h-1 after:w-16
+           after:rounded-full after:bg-gradient-to-r after:from-gold-400 after:to-gold-600;
+  }
+
+  /* Shimmer text effect for premium headings */
+  .text-shimmer {
+    background: linear-gradient(90deg, #ecb73c, #f0c75e, #ecb73c, #d99e21, #ecb73c);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite;
+  }
+}
+
+/* ============================================================
+   Custom scrollbar — premium navy + gold theme
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #0a192f;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3a527d, #1e2f4a);
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ecb73c, #d99e21);
+}
+
+/* ============================================================
+   Selection color
+   ============================================================ */
+::selection {
+  background: rgba(236, 183, 60, 0.25);
+  color: #fff;
+}
