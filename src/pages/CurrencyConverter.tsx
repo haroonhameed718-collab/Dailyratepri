@@ -55,7 +55,7 @@ export default function CurrencyConverter() {
 
       setRates(data.rates as Record<string, number>);
       setUpdated(data.updated || '');
-    } catch (err) {
+    } catch {
       setError('Failed to load exchange rates. Please try again.');
     } finally {
       setLoading(false);
