@@ -1,11 +1,11 @@
 /**
  * currency-rates edge function
  * ----------------------------
- * Fetches live currency exchange rates from ExchangeRate-API
- * Uses API key from environment variable for production deployment
+ * Fetches live currency exchange rates from FastForex API
+ * Uses API key from environment variable for secure production deployment
  *
  * Environment Variables:
- * - REACT_APP_API_KEY: Your ExchangeRate-API key (required for production)
+ * - FASTFOREX_API_KEY: Your FastForex API key (configured in Netlify)
  *
  * Endpoint: GET /functions/v1/currency-rates
  * Returns:  { base: "USD", rates: { EUR: 0.92, GBP: 0.79, ... }, updated: "..." }
@@ -24,43 +24,45 @@ Deno.serve(async (req: Request) => {
   }
 
   try {
-    // Get API key from environment variable
-    const apiKey = Deno.env.get("REACT_APP_API_KEY");
+    // Get API key from environment variable (NEVER hardcode keys)
+    const apiKey = Deno.env.get("FASTFOREX_API_KEY");
 
-    // Build the API URL based on whether API key is available
-    let apiUrl: string;
-    if (apiKey) {
-      // Use API key if available (for production with enhanced rate limits)
-      apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`;
-    } else {
-      // Fallback to free API endpoint (development only)
-      console.warn(
-        "REACT_APP_API_KEY not configured. Using free tier API (limited rates)."
+    if (!apiKey) {
+      throw new Error(
+        "FASTFOREX_API_KEY environment variable not configured. Please set it in Netlify Environment Settings."
       );
-      apiUrl = "https://open.er-api.com/v6/latest/USD";
     }
 
-    // Fetch live rates from the API
+    // Fetch live rates from FastForex API
+    const apiUrl = `https://api.fastforex.io/fetch?from=USD&to=EUR,GBP,JPY,AUD,CAD,CHF,CNY,INR,PKR,SGD,AED,NZD,MXN,BRL,ZAR,HKD&api_key=${apiKey}`;
+
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
-      throw new Error(
-        `API returned status ${response.status}. Please check your API key configuration.`
-      );
+      if (response.status === 401) {
+        throw new Error("Invalid API key. Please check your FASTFOREX_API_KEY configuration.");
+      }
+      throw new Error(`FastForex API returned status ${response.status}`);
     }
 
     const data = await response.json();
 
     // Validate the response shape before returning
-    if (!data || !data.rates || typeof data.rates !== "object") {
-      throw new Error("Invalid response structure from exchange rate API");
+    if (!data || !data.results || typeof data.results !== "object") {
+      throw new Error("Invalid response structure from FastForex API");
     }
+
+    // Transform FastForex format to standard format (add USD as base rate 1.0)
+    const rates = {
+      USD: 1.0,
+      ...data.results,
+    };
 
     return new Response(
       JSON.stringify({
         base: "USD",
-        rates: data.rates,
-        updated: data.time_last_update_utc || new Date().toISOString(),
+        rates: rates,
+        updated: data.updated || new Date().toISOString(),
       }),
       {
         status: 200,
